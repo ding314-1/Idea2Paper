@@ -79,22 +79,28 @@ def _get(key: str, default, cast=None, cfg_path: list | None = None):
     return _cast(value, cast) if cast else value
 
 # ===================== LLM API 配置 =====================
-LLM_API_KEY = os.getenv("SILICONFLOW_API_KEY", "")
+# Support multiple API keys for different providers
+LLM_API_KEY = (
+    os.getenv("LLM_API_KEY") or 
+    os.getenv("GITHUB_TOKEN") or 
+    os.getenv("SILICONFLOW_API_KEY") or 
+    ""
+)
 LLM_API_URL = _get(
     "LLM_API_URL",
-    "https://api.siliconflow.cn/v1/chat/completions",
+    "https://models.github.ai/inference/chat/completions",
     cast=str,
     cfg_path=["llm", "api_url"],
 )
 LLM_MODEL = _get(
     "LLM_MODEL",
-    "Pro/zai-org/GLM-4.7",
+    "openai/gpt-4o-mini",
     cast=str,
     cfg_path=["llm", "model"],
 )
 
 # ===================== Embedding API 配置 =====================
-# Embedding 可独立配置；默认沿用 SiliconFlow + Qwen3-Embedding-8B。
+# Embedding 可独立配置；支持多种提供商。
 EMBEDDING_PROVIDER = _get(
     "EMBEDDING_PROVIDER",
     "siliconflow",
@@ -113,8 +119,13 @@ EMBEDDING_MODEL = _get(
     cast=str,
     cfg_path=["embedding", "model"],
 )
-# Secret: only from env/.env; fallback to SILICONFLOW_API_KEY (LLM_API_KEY)
-EMBEDDING_API_KEY = os.getenv("EMBEDDING_API_KEY", "") or LLM_API_KEY
+# Secret: only from env/.env; fallback to LLM_API_KEY
+EMBEDDING_API_KEY = (
+    os.getenv("EMBEDDING_API_KEY") or 
+    os.getenv("GITHUB_TOKEN") or 
+    os.getenv("SILICONFLOW_API_KEY") or 
+    LLM_API_KEY
+)
 
 # ===================== Run Logging 配置 =====================
 LOG_ROOT = _get(
