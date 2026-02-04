@@ -107,8 +107,39 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
    pip install -r Paper-KG-Pipeline/requirements.txt
    ```
 3. **配置**：
-   - 复制 `.env.example` -> `.env`，填写 `SILICONFLOW_API_KEY` 等敏感键（不要提交）
-   - 可选：复制 `i2p_config.example.json` -> `i2p_config.json` 调整阈值/anchors 等
+
+   #### 方案 1: GitHub Models（推荐）
+   
+   1. 创建 GitHub Personal Access Token (PAT):
+      - 访问 GitHub 设置 → Developer settings → Personal access tokens → Fine-grained tokens
+      - 创建一个拥有 `models:read` 权限的新令牌
+      - 复制令牌
+   
+   2. 复制 `.env.example` 到 `.env` 并配置:
+      ```bash
+      GITHUB_TOKEN=your_github_pat_here
+      LLM_API_URL=https://models.github.ai/inference/chat/completions
+      LLM_MODEL=openai/gpt-4o-mini
+      ```
+   
+   3. （可选）复制 `i2p_config.example.json` 到 `i2p_config.json` 以调整设置。
+   
+   #### 方案 2: SiliconFlow 或其他提供商
+   
+   1. 复制 `.env.example` 到 `.env` 并填写 API 凭据:
+      ```bash
+      # 使用 SiliconFlow:
+      SILICONFLOW_API_KEY=your_key_here
+      LLM_API_URL=https://api.siliconflow.cn/v1/chat/completions
+      LLM_MODEL=Pro/zai-org/GLM-4.7
+      
+      # 使用 OpenAI:
+      LLM_API_KEY=your_openai_key
+      LLM_API_URL=https://api.openai.com/v1/chat/completions
+      LLM_MODEL=gpt-4o-mini
+      ```
+   
+   2. （可选）复制 `i2p_config.example.json` 到 `i2p_config.json` 以调整设置。
 
 > **注意：** embedding 模型可通过 `EMBEDDING_MODEL` / `EMBEDDING_API_URL`（环境变量或 `i2p_config.json`）自由切换。切换模型后需重建 novelty/recall 索引，或使用带模型后缀的索引目录以避免不匹配。  
 > **约束：** embedding 模型必须输出 **4096 维**向量（与默认 `Qwen/Qwen3-Embedding-8B` 一致）。  

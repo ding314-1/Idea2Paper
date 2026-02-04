@@ -104,7 +104,37 @@ pip install -r Paper-KG-Pipeline/requirements.txt
 
 ### Configuration
 
-1. Copy `.env.example` to `.env` and fill in `SILICONFLOW_API_KEY`.
+#### Option 1: GitHub Models (Recommended)
+
+1. Create a GitHub Personal Access Token (PAT):
+   - Go to GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens
+   - Create a new token with `models:read` permission
+   - Copy the token
+
+2. Copy `.env.example` to `.env` and configure:
+   ```bash
+   GITHUB_TOKEN=your_github_pat_here
+   LLM_API_URL=https://models.github.ai/inference/chat/completions
+   LLM_MODEL=openai/gpt-4o-mini
+   ```
+
+3. (Optional) Copy `i2p_config.example.json` to `i2p_config.json` to tweak settings.
+
+#### Option 2: SiliconFlow or Other Providers
+
+1. Copy `.env.example` to `.env` and fill in your API credentials:
+   ```bash
+   # For SiliconFlow:
+   SILICONFLOW_API_KEY=your_key_here
+   LLM_API_URL=https://api.siliconflow.cn/v1/chat/completions
+   LLM_MODEL=Pro/zai-org/GLM-4.7
+   
+   # For OpenAI:
+   LLM_API_KEY=your_openai_key
+   LLM_API_URL=https://api.openai.com/v1/chat/completions
+   LLM_MODEL=gpt-4o-mini
+   ```
+
 2. (Optional) Copy `i2p_config.example.json` to `i2p_config.json` to tweak settings.
 
 ### Usage
